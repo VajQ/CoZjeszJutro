@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+        
+<legend align="center" class="border-bottom mb-4">Zamówienia z dnia: {{ date.strftime("%d/%m/%Y") }}</legend>
+<div align="center">
+    <select id="district_list" onchange="districtChange()">
+        <option value="none" selected disabled hidden>Wybierz dzielnicę</option>
+        <option value="0">Wszystkie</option>
+        <option value="1">Bemowo</option>
+        <option value="2">Białołęka</option>
+        <option value="3">Bielany</option>
+        <option value="4">Mokotów</option>
+        <option value="5">Ochota</option>
+        <option value="6">Praga-Południe</option>
+        <option value="7">Praga-Północ</option>
+        <option value="8">Rembertów</option>
+        <option value="9">Śródmieście</option>
+        <option value="10">Targówek</option>
+        <option value="11">Ursus</option>
+        <option value="12">Ursynów</option>
+        <option value="13">Wawer</option>
+        <option value="14">Wesoła</option>
+        <option value="15">Wilanów</option>
+        <option value="16">Włochy</option>
+        <option value="17">Wola</option>
+        <option value="18">Żoliborz</option>
+
+    </select>
+</div>
+<script>
+        function districtChange() {
+            var ddl = document.getElementById("district_list");
+            var selectedValue = ddl.options[ddl.selectedIndex].value;            
+            window.location.href = "/orders/" + selectedValue;
+        }
+    
+    </script>
+<br>
+
+    {% for group in group_dict %}
+        <article class="media content-section">
+            <div class="media-body">
+
+                {% for order in orders %}
+                    {% for order_id in group_dict[group] %}
+                        {% if order_id == order.order_id %}
+                            <article class="media content-section">
+                                <div class="media-body">
+                                    <div class="article-metadata">
+                                        <a  class="mr-2" href="#">#{{ order.order_id }}</a>    
+                                        
+                                        
+                                        <span class="text-muted">{{ order.client_district}}</span>
+                                        <span class="text-muted" >Kontakt: {{ order.client_phone_number }}</span>
+                                        
+                                        
+                                    </div>
+
+                                                    
+                                    {% for position in positions %}
+                                        <div >
+                                        {% if position.order_id == order.order_id %}
+                                            {{ Dish.query.filter_by(dish_id=position.dish_id).first().name }} x {{ position.dish_count }}
+                                        {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    
+                                    <div class="article-metadata"></div>
+                                    
+                                    <span style="float: left;">
+                                        Płatność: {{ order.payment }} 
+                                    </span> 
+                                    <span style="float: right;">
+                                        Koszt: {{ order.total_value}}
+                                    </span>
+                                    <div style="clear:both;"></div>
+                        
+
+                                    {% if order.home_number %} 
+                                        <div align="center">
+                                            Adres: {{ order.street_name}} {{ order.street_number}} / {{ order.home_number}} 
+                                        </div>
+                                    {% else %} 
+                                        <div align="center">
+                                            Adres: {{ order.street_name}} {{ order.street_number}} 
+                                        </div>
+                                    {% endif %}
+                                    
+
+
+                                    
+                                </div>
+                            </article>
+                            {% endif %}
+                        {% endfor %}
+                        
+                {% endfor %}
+            </div>
+            </article>
+    {% endfor %}
+{% endblock content %}

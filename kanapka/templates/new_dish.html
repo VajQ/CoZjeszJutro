@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Dodaj nową potrawę</legend>
+                <div class="form-group">
+                        Kategoria
+                        {% if form.category.errors %}
+                        {{ form.category(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.category.errors %}
+                                <span> {{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    
+                    {% else %}
+                        {{form.category(class="form-control form-control-lg")}}
+                    {% endif %}                    
+                    </div>
+
+
+                    <div class="form-group">
+                            {{form.name.label(class="form-control-label")}} 
+                            {% if form.name.errors %}
+                                {{ form.name(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            
+                            {% else %}
+                                {{form.name(class="form-control form-control-lg")}}
+                            {% endif %}                    
+                    </div>
+
+                    
+                    <div class="form-group">
+                            {{form.description.label(class="form-control-label")}} 
+                            {% if form.description.errors %}
+                                {{ form.description(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.description.errors %}
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            
+                            {% else %}
+                                {{form.description(class="form-control form-control-lg")}}
+                            {% endif %}                    
+                    </div>
+        
+                    
+        
+        
+                    <div class="form-group">
+                        {{form.prize.label(class="form-control-label")}} 
+                        {% if form.prize.errors %}
+                            {{ form.prize(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.prize.errors %}
+                                    <span> {{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        
+                        {% else %}
+                            {{form.prize(class="form-control form-control-lg")}}
+                        {% endif %}                    
+                    </div>
+        
+                   
+                    <div class="form-group">
+                        {{ form.picture.label() }}
+                        {{ form.picture(class="form-control-file") }}
+                        {% if form.picture.errors %}
+                            {% for error in form.picture.errors %}
+                                <span class="text-danger">{{ error }}</span></br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    {{ form.submit1(class="btn btn-outline-info") }}
+                </div>
+
+        </form>
+
+    </div>
+    
+{% endblock content %}
+
+{% block sidebar %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ c_form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Dodaj nową kategorię</legend>
+                    <div class="form-group">
+                            {{c_form.name_c.label(class="form-control-label")}} 
+                            {% if c_form.name_c.errors %}
+                                {{ c_form.name_c(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in c_form.name_c.errors %}
+                                        <span> {{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            
+                            {% else %}
+                                {{c_form.name_c(class="form-control form-control-lg")}}
+                            {% endif %}                    
+                    </div>
+
+                </fieldset>
+                <div class="form-group">
+                    {{ c_form.submit2(class="btn btn-outline-info") }}
+                </div>
+
+        </form>
+
+    </div>
+
+{% endblock sidebar %}

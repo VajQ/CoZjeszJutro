@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+    <legend class="border-bottom mb-4">Dodaj do menu</legend>
+    {% for dish in dishes %}
+      {% if not menu %}
+      
+        <div class="content-section">
+                  
+          <div class="media-body">
+              <div text-align: right;>
+                  {{ dish.name }} {{ dish.prize }}
+                  <a class="btn btn-danger btn-sm mt-1 mb-1" href="{{ url_for('staff.add_dish', dish_id=dish.dish_id) }}">Dodaj</a>    
+              </div>
+                        
+          </div>
+
+        
+      </div>
+     
+      {% else %}
+        <div class="content-section">
+            
+          <div class="media-body">
+              <div text-align: right;>
+                  {{ dish.name }} {{ dish.prize }}
+                  <a class="btn btn-danger btn-sm mt-1 mb-1" href="{{ url_for('staff.add_dish', dish_id=dish.dish_id) }}">Dodaj</a>    
+                  
+              </div>
+                        
+          </div>
+
+          
+        </div>
+        
+        {% endif %}
+      {% endfor %}
+    
+    
+{% endblock content %}
+
+{% block sidebar %}
+{% if menu %}
+  <legend class="border-bottom mb-4">Menu na dzień: {{ menu[0].date }}</legend>
+  {% for position in menu %}
+    
+    <div class="content-section">
+          
+      <div class="media-body">
+          <div text-align: right;>
+              {{ position.dish_m.name }} {{ position.dish_m.prize }}
+              <a class="btn btn-danger btn-sm mt-1 mb-1" href="{{ url_for('staff.delete_dish', dish_id=position.dish_id) }}">Usuń</a>    
+              
+          </div>
+                    
+      </div>
+
+    
+  </div>
+  
+
+  {% endfor %}
+
+{% else %}
+  <legend class="border-bottom mb-4">Brak pozycji w menu</legend>
+{% endif %}
+
+{% endblock sidebar %}

@@ -1,0 +1,165 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12"> 
+
+        {% if not open %}
+        <div class="content-section">
+            <legend class="border-bottom mb-4">Witamy! Zamówienia przyjmujemy w godzinach 6:00 - 18:00. Zapraszamy jutro!</legend>
+        </div>
+        {% else %}
+            
+            {% for company in companies %}
+             <h2>{{ company.name }}</h2>
+                
+                {% for cate in category %}
+                    
+                    {% if cate.company_id == company.company_id %}
+                        
+                        <div class="content-section">
+                        <h2>{{ cate.name }}</h2>
+                        {% for position in menu %}
+                            {% if cate.category_id == position.dish_m.category_id %}
+                                <div class="content-section">
+                                    
+                                    <div class="media-body">
+                                        <div text-align: right;>
+                                            
+                                            <div align="center"><h2>{{ position.dish_m.name }}</h2></div>
+                                            <div class="imgbox">
+                                                <img class="center-fit" src="{{ url_for('static', filename='dish_pics/' + position.dish_m.image_file) }}">
+                                            </div>
+                                            <h5>{{ position.dish_m.description }}</h5>
+
+                                            <div align="right">
+                                                {{ position.dish_m.prize }} zł
+                                                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('customers.add_to_cart', dish_id=position.dish_m.dish_id) }}">Dodaj do koszyka</a>                                    
+                                            </div>
+                                        </div>
+                                                    
+                                    </div>
+
+                                    
+                                </div>
+                               
+                                {% endif %}
+                            {% endfor %}
+                        </div>  
+                        {% endif %}
+                    {% endfor %}
+             {% endfor %}
+                
+        {% endif %}
+
+
+
+    </div>
+
+
+    
+</div>
+
+{% endblock content %}
+
+{% block sidebar %}
+{% if open %}
+<div class="content-section">
+        <span style="float: left;">
+                <legend class="border-bottom mb-4">Zamówienie</legend>
+                
+            </span> 
+            <span style="float: right;">
+                
+                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#emptyModal">Opróżnij</button>
+            </span>
+            <div style="clear:both;"></div>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="emptyModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Chcesz usunąć zamówienie?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                            <form action="{{ url_for('customers.empty_cart') }}" method="POST">
+                            <input class="btn btn-danger" type="submit" value="Opróżnij">
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div> 
+
+
+
+        
+        {% if not cart %}
+            <h6>Zamówienie jest puste</h6>
+        {% else %}
+            {% for company in companies %}
+                <h6>{{ company.name }}:</h6>
+
+                {% for item in cart %}
+                    {% if Dish.query.filter_by(dish_id=item).first().company_id == company.company_id %}
+                        <span style="float: left;">
+                            {{ Dish.query.filter_by(dish_id=item).first().name }}
+                            x{{ cart[item] }}
+                        </span> 
+                        <span style="float: right;">
+                            {{ Dish.query.filter_by(dish_id=item).first().prize * cart[item] }} zł
+                            <a class="btn btn-warning btn-sm mt-1 mb-1" href="{{ url_for('customers.delete_from_cart', dish_id=item) }}">Usuń danie</a>                        
+                        </span>
+                        <div style="clear:both;"></div>
+                    
+                
+                    
+                    
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            <span style="float: left;">
+                <h6>Dostawa</h6>
+                </span> 
+                <span style="float: right;">
+                    {{ delivery_cost }} zł
+                                   
+                </span>
+                <div style="clear:both;"></div>
+
+            <legend class="border-bottom mb-4"></legend>
+            <span style="float: left;">
+            </span> 
+            <span style="float: right;">
+                Całkowity koszt: {{ total_prize }} zł
+                <button type="button" class="btn btn-success btn-sm m-1" data-toggle="modal" data-target="#orderModal">Zamów</button>
+            </span>
+            <div style="clear:both;"></div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Chcesz przejść do zamawiania?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                            <form action="{{ url_for('customers.add_order') }}" method="POST">
+                            <input class="btn btn-success" type="submit" value="Zamów">
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div> 
+
+        {% endif %}
+</div>
+{% endif %}
+{% endblock sidebar %}

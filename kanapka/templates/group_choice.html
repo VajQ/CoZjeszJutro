@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <h3>Dołącz do zamówienia, które jest w promieniu kilometra od twojego adresu, aby nie płacić za dostawę!</h3>
+    </div>
+    {% if not group_dict %}
+    <div class="content-section">
+        <h4>Niestety nie ma zamówień w twojej okolicy</h4>
+        <div align=right>
+            <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('customers.add_group', group_id=0, order_id=order_id )}}">Złóż samodzielne zamówienie</a>
+        </div>
+    </div>
+    {% else %}
+        <div class="content-section">            
+            {% for group in group_dict %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <h5>Adresy:</h5>        
+                    {% for order in orders %}
+                        {% for order_id in group_dict[group] %}
+                            {% if order_id == order.order_id %}          
+                                {% if order.home_number %} 
+                                   - {{ order.street_name}} {{ order.street_number}} / {{ order.home_number}} 
+                                {% else %} 
+                                   - {{ order.street_name}} {{ order.street_number}} 
+                                {% endif %}
+                                <br>
+                            {% endif %}
+                        {% endfor %}  
+                    {% endfor %}    
+                    <div align=right>        
+                        <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('customers.add_group', group_id=group, order_id=order_id )}}">Dołącz do zamówienia</a>
+                    </div>
+                </div>
+                
+            </article>
+        
+            {% endfor %}
+            <h4>Nie ma żadnego zamówienia w promieniu kilometra?</h4>
+            <div align=center>     
+                <a class="btn btn-primary btn-sm mt-1 mb-1" href="{{ url_for('customers.add_group', group_id=0, order_id=order_id )}}">Złóż samodzielne zamówienie</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}
