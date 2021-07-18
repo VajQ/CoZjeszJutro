@@ -1,7 +1,7 @@
 venv
 reset.py
-kanapka\__init__.py
-kanapka\config.py
+kanapka/__init__.py
+kanapka/config.py
 site.db
 .vscode
 __pycache__/
