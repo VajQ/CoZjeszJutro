@@ -1,9 +1,10 @@
 venv
-admin.py
-#__init__.py
-#config.py
+reset.py
+__init__.py
+config.py
 site.db
 .vscode
 __pycache__/
 *.py[cod]
 flask_session/
+requirements.txt

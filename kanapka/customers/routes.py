@@ -10,7 +10,7 @@ from kanapka.customers.utils import district_switch, send_email
 
 customers = Blueprint('customers', __name__)
 
-opening = datetime.strptime('6:00', '%H:%M').time()
+opening = datetime.strptime('5:45', '%H:%M').time()
 closing = datetime.strptime('23:00', '%H:%M').time()
 delivery_cost = 4.0
 
@@ -25,20 +25,24 @@ def home():
         open = True
         
         #TOMORROW
-        category = Category.query.join(Dish, Menu).\
-            filter(Menu.date==datetime.now().date()+timedelta(days=1)).\
-            all()
-        menu = Menu.query.filter_by(date=datetime.now().date()+timedelta(days=1)).all()
-        # NOW
-       # menu = Menu.query.filter_by(date=datetime.now().date()).all()
-       #category = Category.query.join(Dish, Menu).\
-       #     filter(Menu.date==datetime.now().date()).\
+        #category = Category.query.join(Dish, Menu).\
+        #    filter(Menu.date==datetime.now().date()+timedelta(days=1)).\
         #    all()
+        #menu = Menu.query.filter_by(date=datetime.now().date()+timedelta(days=1)).all()
 
+        # NOW
+        menu = Menu.query.filter_by(date=datetime.now().date()).all()
+        category = Category.query.join(Dish, Menu).\
+            filter(Menu.date==datetime.now().date()).\
+            all()
 
+        print(menu)
+        print(category)
+
+        # zamienic  0 na 1
         companies = Company.query.join(Dish, Menu).\
-            filter(Menu.date==datetime.now().date()+timedelta(days=1)).all()
-
+            filter(Menu.date==datetime.now().date()+timedelta(days=0)).all()
+        print(companies)
         cart = {}
         total_prize = 0.0
 
@@ -124,8 +128,9 @@ def add_order():
                     total_prize += Dish.query.get(k).prize * v
     total_prize += delivery_cost
     total_prize = round(total_prize, 2)
+    # 0 na 1
     companies = Company.query.join(Dish, Menu).\
-            filter(Menu.date==datetime.now().date()+timedelta(days=1)).all()
+            filter(Menu.date==datetime.now().date()+timedelta(days=0)).all()
     form=SupplyForm()
     if form.submit.data and form.validate_on_submit():
         datetime_now = datetime.now()

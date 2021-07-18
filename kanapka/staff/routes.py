@@ -17,7 +17,7 @@ from kanapka.customers.utils import district_switch
 staff = Blueprint('staff', __name__)
 
 
-opening = datetime.strptime('6:00', '%H:%M').time()
+opening = datetime.strptime('10:00', '%H:%M').time()
 closing = datetime.strptime('23:00', '%H:%M').time()
 
 
@@ -184,7 +184,8 @@ def production():
     
     #if now <= closing:
     #    date_orders = datetime.now().date() - timedelta(days=1)
-   # else:
+    #else:
+    #    date_orders = datetime.now().date()
     date_orders = datetime.now().date()
     positions = Position.query.join(Order).join(Dish).\
         filter(Order.date_ordered==date_orders).\
@@ -199,9 +200,9 @@ def production():
             all_dishes[position.dish_id] = all_dishes[position.dish_id] + position.dish_count
         else:
             all_dishes[position.dish_id] = position.dish_count
-
+    # 0 na 1
     categories = Category.query.join(Dish, Menu, Position, Order).\
-            filter(Menu.date==datetime.now().date()+timedelta(days=1)).\
+            filter(Menu.date==datetime.now().date()+timedelta(days=0)).\
             filter(Category.company_id==current_user.company_id).\
             all()
             

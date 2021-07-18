@@ -4,18 +4,19 @@
 {% block content %}
         
     <legend align="center" class="border-bottom mb-4">Zamówienia z dnia: {{ date.strftime("%d/%m/%Y") }}</legend>
-    
+        
         {% for category in categories %}
         <h4>{{ category.name }}:</h4>
         <article class="media content-section">
                 <div class="media-body">   
+                   
                     {% if not all_dishes%}
                         Brak zamówień
                     {% else %}
-                    
+                        
                         {% for dish in all_dishes %}
                             {% if Dish.query.filter_by(dish_id=dish).first().category_id == category.category_id %}
-                                <div>
+                                <div>                                    
                                     {{ Dish.query.filter_by(dish_id=dish).first().name }} x {{ all_dishes[dish] }}
                                 </div>
                             {% endif %}
